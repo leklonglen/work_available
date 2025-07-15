@@ -1,6 +1,60 @@
-/* Custom styles for Gantt cells (These will be applied via JS mostly) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+}
+
+h1 {
+    text-align: center;
+    color: #0056b3;
+    margin-bottom: 25px;
+}
+
+.controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+}
+
+#currentMonthRange {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Custom styles for Gantt cells */
 .gantt_cell_green {
-    background-color: #e6ffe6 !important; /* อ่อนกว่าเดิมเล็กน้อยเพื่อไม่ให้กลืน */
+    background-color: #e6ffe6 !important;
 }
 
 .gantt_cell_gray {
@@ -8,7 +62,7 @@
 }
 
 .gantt_cell_yellow {
-    background-color: #fffacd !important; /* LemonChiffon */
+    background-color: #fffacd !important;
 }
 
 /* DHTMLX Gantt overrides for clearer display of daily info */
@@ -21,20 +75,28 @@
 .gantt_cell {
     border-right: 1px solid #ddd;
 }
-.gantt_tooltip { /* Basic tooltip styling if needed */
-    background-color: #333;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 0.9em;
+
+/* --- ส่วนที่สำคัญ: ซ่อน Task Bar และเนื้อหา --- */
+.gantt_task_line {
+    display: none !important; /* ซ่อนแถบสีของ Task */
 }
 
-/* --- ส่วนที่เพิ่มเข้ามา เพื่อซ่อน Task Bar --- */
-.gantt_task_line {
+/* สำหรับบางเวอร์ชันของ DHTMLX หรือการตั้งค่าเฉพาะ อาจต้องซ่อน content ด้วย */
+.gantt_task_content {
     display: none !important;
 }
 
-.no_task_bar .gantt_task_content {
-    display: none !important; /* ซ่อนเนื้อหาของ task bar ด้วย */
+/* หาก task_height ถูก set เป็น 0 หรือน้อยมาก มันอาจทำให้มองไม่เห็น */
+/* การตั้งค่านี้จะทำให้แถวของวันมีพื้นที่ให้เห็นสี */
+.gantt_task_row {
+    height: 30px !important; /* ควรเท่ากับ gantt.config.row_height */
 }
-/* ------------------------------------------- */
+
+/* ทำให้เส้นแบ่งระหว่างวันใน Timeline ชัดเจนขึ้น */
+.gantt_timeline_area .gantt_scale_line {
+    border-right: 1px solid #ccc;
+}
+
+.gantt_timeline_area .gantt_task_cell {
+    border-right: 1px solid #e0e0e0; /* เส้นแบ่งเซลล์รายวัน */
+}
