@@ -1,34 +1,84 @@
 body {
-  font-family: sans-serif;
-  padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+}
+
+h1 {
+    text-align: center;
+    color: #0056b3;
+    margin-bottom: 25px;
 }
 
 .controls {
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.chart {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 4px;
+.controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-.cell {
-  padding: 8px;
-  border: 1px solid #ccc;
+.controls button:hover {
+    background-color: #0056b3;
 }
 
-.bg-green {
-  background-color: #d4edda;
-}
-.bg-yellow {
-  background-color: #fff3cd;
-}
-.bg-gray {
-  background-color: #e2e3e5;
+#currentMonthRange {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
 }
 
-input {
-  width: 40px;
-  margin-left: 4px;
+/* Custom styles for Gantt cells (These will be applied via JS mostly) */
+.gantt_cell_green {
+    background-color: #e6ffe6 !important; /* อ่อนกว่าเดิมเล็กน้อยเพื่อไม่ให้กลืน */
+}
+
+.gantt_cell_gray {
+    background-color: #e0e0e0 !important;
+}
+
+.gantt_cell_yellow {
+    background-color: #fffacd !important; /* LemonChiffon */
+}
+
+/* DHTMLX Gantt overrides for clearer display of daily info */
+.gantt_grid_scale, .gantt_task_scale {
+    background-color: #f0f0f0;
+}
+.gantt_task_cell {
+    border-right: 1px solid #ddd;
+}
+.gantt_cell {
+    border-right: 1px solid #ddd;
+}
+.gantt_tooltip { /* Basic tooltip styling if needed */
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
 }
