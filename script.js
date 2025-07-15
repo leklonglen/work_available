@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let currentDate = new Date(); // เริ่มต้นจากเดือนปัจจุบัน
 
     // ฟังก์ชันสำหรับสร้างข้อมูลช่างจำลอง (Mock Data)
-    // ในโลกจริง คุณจะดึงข้อมูลนี้จาก API หรือฐานข้อมูล
     function generateTechnicianData(startDate, endDate) {
         const data = [];
         let cursorDate = new Date(startDate);
@@ -24,10 +23,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                  if (technicianB_available <= 1) technicianB_available = Math.floor(Math.random() * 3) + 2; // อย่างน้อย 2 คน
             }
 
-
+            // ใน DHTMLX Gantt แต่ละ 'task' คือ 1 แถวในตาราง
+            // เราจะสร้าง task 1 วันต่อ 1 task เพื่อให้เราสามารถควบคุมสีของแต่ละวันได้
             data.push({
                 id: dateString, // ใช้ dateString เป็น ID ของ task
-                text: `${dateString}`, // ข้อความหลักของ task
+                text: '', // ไม่ต้องแสดงข้อความในส่วน Grid (ตารางซ้าย) ถ้าต้องการให้แสดงแค่ข้อมูลช่างว่างในคอลัมน์พิเศษ
                 start_date: dateString,
                 duration: 1, // แต่ละ task คือ 1 วัน
                 technicianA: technicianA_available,
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // ฟังก์ชันสำหรับตั้งค่าและแสดงผล Gantt Chart
     function renderGantt(monthOffset = 0) {
         // คำนวณช่วงวันที่สำหรับ 2 เดือน
+        // currentDate เป็นวันที่ที่เราใช้เป็นจุดอ้างอิง
         const firstDayOfPeriod = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
         const lastDayOfPeriod = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset + 2, 0); // สิ้นสุดของเดือนที่สอง
 
@@ -56,8 +57,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         gantt.config.subscales = [
             { unit: "month", step: 1, date: "%F, %Y" }
         ];
+
+        // กำหนดคอลัมน์ในส่วน Grid (ตารางด้านซ้าย)
         gantt.config.columns = [
-            { name: "text", label: "วันที่", width: 100, resize: true },
+            { name: "text", label: "วันที่", width: 100, resize: true, template: function(item) {
+                // แสดงวันที่ในคอลัมน์ "วันที่" ของ Grid
+                // ถ้าต้องการแสดงวันที่แค่ใน Timeline ก็ให้ text เป็นช่องว่างได้
+                return new Date(item.start_date).toLocaleDateString('th-TH', { day: 'numeric', month: 'numeric' });
+            }},
             {
                 name: "technicianInfo", label: "ช่างว่าง (A/B)", width: 120, align: "center", template: function(item) {
                     // แสดงข้อมูลช่างในคอลัมน์นี้
@@ -66,26 +73,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         ];
         gantt.config.row_height = 30; // ความสูงของแต่ละแถว
-        gantt.config.task_height = 0; // ทำให้ task bar ไม่แสดง เพื่อให้เห็นแต่เซลล์
+        // gantt.config.task_height = 0; // ลบ/คอมเมนต์ บรรทัดนี้ออก
         gantt.config.show_errors = false; // ปิดการแสดง error message ของ DHTMLX ถ้าไม่อยากเห็น
 
-        // ปิด grid column ทั้งหมดเพื่อเน้นที่วันที่และข้อมูลช่างว่าง
-        gantt.config.show_grid = true; // เปิด grid
-        gantt.config.show_chart = true; // เปิด chart area (ที่เราจะลงสี)
+        gantt.config.show_grid = true; // เปิด Grid (ตารางด้านซ้าย)
+        gantt.config.show_chart = true; // เปิด Chart (ตารางวันที่ด้านขวา)
 
-        // กำหนด template สำหรับเซลล์ในส่วนของแผนภูมิ (chart area)
-        gantt.templates.task_cell_class = function(item, date) {
-            const dayOfWeek = date.getDay(); // 0 = อาทิตย์, 6 = เสาร์
-
-            // หาวันที่ตรงกันในข้อมูลของเรา
+        // **สำคัญ:** กำหนด template สำหรับสีพื้นหลังของแต่ละแถวในส่วน Timeline
+        // เราจะใช้ task_row_class เพื่อกำหนด class ให้กับทั้งแถวของแต่ละวัน
+        gantt.templates.task_row_class = function(item, date) {
+            // ในที่นี้ item คือข้อมูล task ของแต่ละวัน
+            // date จะเป็นวันที่เริ่มต้นของ task นั้นๆ
             const itemDate = new Date(item.start_date);
-            if (date.toDateString() !== itemDate.toDateString()) {
-                // หากเซลล์ไม่ใช่ของ task นั้น (เช่นเซลล์ถัดไปในแถวเดียวกัน)
-                // หรือเป็นเซลล์ที่แสดงวันที่ในอดีต/อนาคตของ task ที่มี duration > 1
-                // ซึ่งในกรณีนี้เรากำหนด duration = 1 อยู่แล้ว ดังนั้นควรตรงกันเสมอ
-                // แต่อาจจะมีช่องว่าง ถ้าข้อมูลไม่ครบ
-                return ''; // ไม่มีคลาสพิเศษ
-            }
+            const dayOfWeek = itemDate.getDay(); // 0 = อาทิตย์, 6 = เสาร์
 
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
             const technicianA = item.technicianA;
@@ -104,6 +104,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // ตั้งค่าวันที่เริ่มต้นและสิ้นสุดของแผนภูมิ
         gantt.config.start_date = firstDayOfPeriod;
         gantt.config.end_date = new Date(lastDayOfPeriod.getFullYear(), lastDayOfPeriod.getMonth(), lastDayOfPeriod.getDate() + 1); // DHTMLX ต้องการ end date ถัดจากวันสุดท้าย 1 วัน
+
+        // กำหนดให้ task bar เป็น 0 (เพื่อไม่ให้มีเส้นแสดง Task ใน Timeline)
+        // แต่ยังคงให้ Timeline แสดงผลอยู่
+        gantt.templates.task_class = function(start, end, task){
+            return "no_task_bar"; // เพิ่มคลาสนี้เพื่อซ่อนแถบ task
+        };
+
 
         // เริ่มต้นและโหลดข้อมูล
         gantt.clearAll(); // เคลียร์ข้อมูลเก่า
