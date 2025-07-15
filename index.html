@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gantt Chart - Worker Availability</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/date-fns@4.1.0/cdn.min.js"></script>
-  <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gantt Chart แสดงสถานะช่างว่าง</title>
+    <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="controls">
-    <button id="prev">ย้อนกลับ</button>
-    <button id="next">เลื่อนไปข้างหน้า</button>
-  </div>
-  <div id="chart" class="chart"></div>
+    <div class="container">
+        <h1>Gantt Chart แสดงสถานะช่างว่าง (2 เดือน)</h1>
+        <div class="controls">
+            <button id="prevMonth">ย้อนกลับ</button>
+            <span id="currentMonthRange"></span>
+            <button id="nextMonth">เลื่อนไปข้างหน้า</button>
+        </div>
+        <div id="gantt_here" style='width:100%; height:700px;'></div>
+    </div>
 
-  <!-- ✅ ใช้ date-fns เวอร์ชัน 2 ที่แน่นอนว่าใช้งาน global ได้ -->
-  
+    <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
