@@ -31,12 +31,11 @@ function render() {
   dates.forEach(date => {
     const key = getKey(date);
     const data = workerData[key];
-
     const total = (data.a || 0) + (data.b || 0);
-    const isWeekendDay = isWeekend(date);
+    const isWknd = isWeekend(date);
 
     let bgClass = "bg-green";
-    if (isWeekendDay) bgClass = "bg-yellow";
+    if (isWknd) bgClass = "bg-yellow";
     else if (total === 0) bgClass = "bg-gray";
 
     const dateCell = document.createElement("div");
@@ -58,7 +57,7 @@ function render() {
     input.addEventListener("input", (e) => {
       const { date, type } = e.target.dataset;
       workerData[date][type] = parseInt(e.target.value) || 0;
-      render(); // re-render to update color
+      render(); // re-render for background color update
     });
   });
 }
