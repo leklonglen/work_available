@@ -1,0 +1,34 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.chart {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 4px;
+}
+
+.cell {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.bg-green {
+  background-color: #d4edda;
+}
+.bg-yellow {
+  background-color: #fff3cd;
+}
+.bg-gray {
+  background-color: #e2e3e5;
+}
+
+input {
+  width: 40px;
+  margin-left: 4px;
+}
